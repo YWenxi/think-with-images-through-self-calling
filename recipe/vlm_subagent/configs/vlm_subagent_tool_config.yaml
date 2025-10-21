@@ -1,0 +1,32 @@
+tools:
+  - class_name: "verl.tools.vlm_subagent_tool.VLMSubAgentTool"
+    config:
+      num_workers: 8
+      rate_limit: 8
+      timeout: 60
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "vlm_subagent_tool"
+        description: "Call the VLM subagent to perform a task on the image."
+        parameters:
+          type: "object"  
+          properties:
+            prompt:
+              type: "string"
+              description: "The prompt to be passed to the VLM subagent."
+            img_idx:
+              type: "number"
+              description: "The index of the image (starting from 0) in the messages to be analyzed."
+            task_type:
+              type: "string"
+              description: "The type of the task you want to perform. For example, 'full_ocr', 'grounding', 'subregion_caption', 'subregion_ocr', and 'subregion_question_answering'."
+            bbox_2d:
+              type: "array"
+              items:
+                type: "number"
+              minItems: 4
+              maxItems: 4
+              description: "The bounding box of the region if you want to zoom in, as [x1, y1, x2, y2], where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner. If you want to perform a subregion task, you must provide `bbox_2d`."
+          required: ["prompt", "img_idx", "task_type"]

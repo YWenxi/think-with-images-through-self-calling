@@ -6,24 +6,24 @@ export LLM_AS_A_JUDGE_BASE="http://127.0.0.1:18901/v1"
 # export WANDB_API_KEY="your wandb key"
 
 PROJECT_NAME="VLM-Subagent-RL"
-EXPERIMENT_NAME="dev-DeepEyes-GRPO"
+EXPERIMENT_NAME="dev-VLM-Subagent-GRPO"
 
 # save experiment results
 EXPERIMENT_DIR="/data2/YangWenxi/subagent-exp"
 
 BASEDIR=/data1/YangWenxi/subagent-rl/verl
 SAVE_CHECKPOINT_DIR=${EXPERIMENT_DIR}/${PROJECT_NAME}/${EXPERIMENT_NAME}/verl_checkpoints
-DATASET_TRAIN=$HOME/Workspace/subagent-rl/data/DeepEyes-Datasets-47k/data_v0.8_visual_toolbox_v2.parquet
-DATASET_VAL=$HOME/Workspace/subagent-rl/data/DeepEyes-Datasets-47k/data_thinklite_reasoning_acc.parquet
+DATASET_TRAIN=$HOME/Workspace/subagent-rl/data/VLMSubAgent-Datasets-47k/data_0.1.2_visual_toolbox_v2.parquet
+DATASET_VAL=$HOME/Workspace/subagent-rl/data/VLMSubAgent-Datasets-47k/data_thinklite_reasoning_acc.parquet
 
-REF_MODEL_PATH=$HOME/Workspace/subagent-rl/pretrained_models/Qwen/Qwen2.5-VL-3B-Instruct
+REF_MODEL_PATH=$HOME/Workspace/subagent-rl/pretrained_models/Qwen/Qwen2.5-VL-7B-Instruct
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6
 export RAY_DEBUG_POST_MORTEM=1
 
 PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
-    --config-path=${BASEDIR}/recipe/deepeyes/configs \
-    --config-name='deepeyes_multiturn_grpo' \
+    --config-path=${BASEDIR}/recipe/vlm_subagent/configs \
+    --config-name='vlm_subagent_multiturn_grpo' \
     data.train_files=${DATASET_TRAIN} \
     data.val_files=[${DATASET_VAL}] \
     data.train_batch_size=56 \
@@ -64,7 +64,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.rollout.multi_turn.max_assistant_turns=5 \
     actor_rollout_ref.rollout.multi_turn.max_user_turns=5 \
     actor_rollout_ref.rollout.multi_turn.max_parallel_calls=1 \
-    actor_rollout_ref.rollout.multi_turn.tool_config_path=recipe/deepeyes/configs/image_zoom_in_tool_config.yaml \
+    actor_rollout_ref.rollout.multi_turn.tool_config_path=recipe/vlm_subagent/configs/vlm_subagent_tool_config.yaml \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb','tensorboard'] \
     trainer.val_before_train=False \

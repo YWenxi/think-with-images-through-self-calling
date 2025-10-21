@@ -49,6 +49,48 @@ if openai_api_base:
         logger.warning(f"Failed to get model from {openai_api_base}: {e}. Reward scoring will be disabled.")
 
 
+CONTEXT_LEARNING_EXAMPLES = """
+# Best Practices
+1. Find the color of some small objects in the image.
+    - Use a grounding prompt to locate the the position of the objects you want to look at in the image
+      ```
+      <tool_call>
+      {
+        "name": "vlm_subagent_tool",
+        "arguments": {
+          "prompt": "Outline the position of baby carriage and output all the coordinates in JSON format.",
+          "img_idx": 0,
+          "task_type": "grounding",
+        }
+      }
+      </tool_call>
+      ```
+    - With the bounding boxes, use a subregion-question-answering prompt to take a closer look at the region and answer the question.
+      ```
+      <tool_call>
+      {
+        "name": "vlm_subagent_tool",
+        "arguments": {
+          "prompt": "Is this a baby carriage? What is the color of the baby carriage?",
+          "img_idx": 0,
+          "task_type": "subregion_question_answering",
+          "bbox_2d": [63, 32, 150, 170]
+        }
+      }
+      </tool_call>
+      ```
+2. Find the number of people in the local subregion
+    - Use a grounding prompt to locate the subregion you want to look at in the image
+    - With the bounding boxes, use a subregion question answering prompt to take a closer look at the region and answer the question.
+3. Determine the relative position of two objects
+    - Use a grounding prompt to locate the two objects in the image
+    - With the bounding boxes, determine the relative position of the two objects
+    
+    
+Analysis all the information you have gathered and provide your final answer inside <answer>..your-final-answer..</answer> tags.
+"""
+
+
 class CustomRLHFDataset(RLHFDataset):
     def __getitem__(self, item):
         """
@@ -60,9 +102,10 @@ class CustomRLHFDataset(RLHFDataset):
                 "role": "system",
                 # We don't need tool description, because custom_chat_template will add it.
                 "content": (
+                    # Add some context learning examples here
                     "You are a helpful assistant. You can call functions to assist with the user query. "
                     "Important: You must call only one function at a time. After each function call, "
-                    "wait for the execution result before making the next function call if needed."
+                    "wait for the execution result before making the next function call if needed." + CONTEXT_LEARNING_EXAMPLES
                 ),
             },
             {
@@ -165,7 +208,7 @@ class CustomRLHFDataset(RLHFDataset):
         # add index for each prompt
         index = row_dict.get("extra_info", {}).get("index", 0)
         tools_kwargs = {
-            "image_zoom_in_tool": {
+            "vlm_subagent_tool": {
                 "create_kwargs": {"image": images[0]},
                 # "execute_kwargs": {},
                 # "calc_reward_kwargs": {},

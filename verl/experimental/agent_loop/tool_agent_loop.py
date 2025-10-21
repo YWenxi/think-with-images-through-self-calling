@@ -124,6 +124,16 @@ class ToolAgentLoop(AgentLoopBase):
             # call tools
             tasks = []
             for tool_call in tool_calls[: self.max_parallel_calls]:
+                # FIXME: add LLM calling toolkits into kwargs if you use subagent
+                if "subagent_tool" in tool_call.name:
+                    tools_kwargs["llm_calling_toolkit"] = {
+                        "processor": self.processor,
+                        "tokenizer": self.tokenizer,
+                        "apply_chat_template_kwargs": self.apply_chat_template_kwargs,
+                        "llm_server_manager": self.server_manager,
+                        "sampling_params": sampling_params,
+                    }
+                
                 tasks.append(self._call_tool(tool_call, tools_kwargs))
             with simple_timer("tool_calls", metrics):
                 tool_responses = await asyncio.gather(*tasks)
@@ -228,6 +238,10 @@ class ToolAgentLoop(AgentLoopBase):
             tool_args = json.loads(tool_call.arguments)
             tool = self.tools[tool_name]
             kwargs = tools_kwargs.get(tool_name, {})
+            
+            # FIXME: load LLM calling toolkit if you use subagent
+            tool_args["llm_calling_toolkit"] = tools_kwargs.get("llm_calling_toolkit", None)
+            
             instance_id, _ = await tool.create(create_kwargs=kwargs.get("create_kwargs", {}))
             tool_execution_response, _, _ = await tool.execute(instance_id, tool_args)
         except Exception as e:
