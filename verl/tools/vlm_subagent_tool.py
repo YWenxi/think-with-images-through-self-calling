@@ -136,7 +136,7 @@ class VLMSubAgentTool(BaseTool):
             "function": {
                 "name": "vlm_subagent_tool",
                 "description": (
-                    "Call the VLM subagent to perform a task on the image."
+                    "Call the VLM subagent to perform a subtask on a subregion of interest in the image."
                 ),
                 "parameters": {
                     "type": "object",
@@ -151,17 +151,17 @@ class VLMSubAgentTool(BaseTool):
                         },
                         "task_type": {
                             "type": "string",
-                            "description": "The type of the task you want to perform. For example, 'full_ocr', 'grounding', 'subregion_caption', 'subregion_ocr', and 'subregion_question_answering'.",
+                            "description": "The type of the subtask you want to perform. For example, 'subregion_caption', 'subregion_ocr', and 'subregion_question_answering'.",
                         },
                         "bbox_2d": {
                             "type": "array",
                             "items": {"type": "number"},
                             "minItems": 4,
                             "maxItems": 4,
-                            "description": "The bounding box of the region if you want to zoom in, as [x1, y1, x2, y2], where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner. If you want to perform a subregion task, you must provide `bbox_2d`.",
+                            "description": "The bounding box of the region if you want to zoom in, as [x1, y1, x2, y2], where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.",
                         },
                     },
-                    "required": ["prompt", "img_idx", "task_type"],
+                    "required": ["prompt", "img_idx", "task_type", "bbox_2d"],
                 },
             }
         })
@@ -225,12 +225,22 @@ class VLMSubAgentTool(BaseTool):
         top = max(0.0, float(top))
         right = min(float(image_width), float(right))
         bottom = min(float(image_height), float(bottom))
-
+        
+        # 2.5 interpolation
+        interpolation_factor: float = 0.05
+        whole_bbox_2d = [0, 0, image_width, image_height]
+        new_bbox_2d = [
+            int(x * (1 - interpolation_factor) + y * interpolation_factor)
+            for x, y in zip([left, top, right, bottom], whole_bbox_2d)
+        ]
+        current_bbox = new_bbox_2d
+        left, top, right, bottom = current_bbox
+        
         # 2. If clamped bbox is invalid, return immediately.
         if not self._validate_bbox(left, top, right, bottom):
             return None
 
-        current_bbox = [left, top, right, bottom]
+        # current_bbox = [left, top, right, bottom]
         height = bottom - top
         width = right - left
 
@@ -362,6 +372,14 @@ class VLMSubAgentTool(BaseTool):
         task_type = parameters.get("task_type")
         img_idx = parameters.get("img_idx") # noqa: not functioning yet
         
+        # if (prompt is None or prompt.strip() == "") and (task_type is None or task_type.strip() == ""):
+        #     prompt = "Describe the image in detail."
+        #     task_type = "subregion_caption"
+        
+        if prompt is None or prompt.strip() == "":
+            error_msg = "Error: Must provide a non-empty prompt as a subtask question to perform the subtask on a subregion of interest in the image."
+            logger.warning(f"Tool execution failed: {error_msg}")
+            return ToolResponse(text=error_msg), -0.05, {"success": False}
 
         instance_data = self._instance_dict[instance_id]
         image = instance_data["image"]
@@ -369,6 +387,9 @@ class VLMSubAgentTool(BaseTool):
         
         if bbox_2d is None:
             input_image = image
+            error_msg = "Error: Must provide a bbox_2d parameter to query a subregion of interest in the image."
+            logger.warning(f"Tool execution failed: {error_msg}")
+            return ToolResponse(text=error_msg), -0.05, {"success": False}
         else:
             if len(bbox_2d) != 4:
                 return (
@@ -397,12 +418,12 @@ class VLMSubAgentTool(BaseTool):
         raw_messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant."
+                "content": "You are a helpful assistant serving as subagent. Given a cropped image and a subtask, solve the subtask and return the result. If further information is needed, encourage the user to make another call to the tool."
             },
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": f"[{task_type}] {prompt}"},
+                    {"type": "text", "text": f"[subtask: {task_type}] {prompt}"},
                     {"type": "image_url", "image_url": {"url": f"data:image/png;base64,"}},
                 ]
             }
