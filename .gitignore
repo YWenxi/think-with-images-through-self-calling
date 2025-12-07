@@ -128,3 +128,4 @@ outputs
 .history
 wandb
 tensorboard_log
+*.whl
