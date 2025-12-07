@@ -49,46 +49,49 @@ if openai_api_base:
         logger.warning(f"Failed to get model from {openai_api_base}: {e}. Reward scoring will be disabled.")
 
 
-CONTEXT_LEARNING_EXAMPLES = """
-# Best Practices
-1. Find the color of some small objects in the image.
-    - Use a grounding prompt to locate the the position of the objects you want to look at in the image
-      ```
-      <tool_call>
-      {
-        "name": "vlm_subagent_tool",
-        "arguments": {
-          "prompt": "Outline the position of baby carriage and output all the coordinates in JSON format.",
-          "img_idx": 0,
-          "task_type": "grounding",
-        }
-      }
-      </tool_call>
-      ```
-    - With the bounding boxes, use a subregion-question-answering prompt to take a closer look at the region and answer the question.
-      ```
-      <tool_call>
-      {
-        "name": "vlm_subagent_tool",
-        "arguments": {
-          "prompt": "Is this a baby carriage? What is the color of the baby carriage?",
-          "img_idx": 0,
-          "task_type": "subregion_question_answering",
-          "bbox_2d": [63, 32, 150, 170]
-        }
-      }
-      </tool_call>
-      ```
-2. Find the number of people in the local subregion
-    - Use a grounding prompt to locate the subregion you want to look at in the image
-    - With the bounding boxes, use a subregion question answering prompt to take a closer look at the region and answer the question.
-3. Determine the relative position of two objects
-    - Use a grounding prompt to locate the two objects in the image
-    - With the bounding boxes, determine the relative position of the two objects
+# CONTEXT_LEARNING_EXAMPLES = """
+# # Best Practices
+# 1. Find the color of some small objects in the image.
+#     - Use a grounding prompt to locate the the position of the objects you want to look at in the image
+#       ```
+#       <tool_call>
+#       {
+#         "name": "vlm_subagent_tool",
+#         "arguments": {
+#           "prompt": "Outline the position of baby carriage and output all the coordinates in JSON format.",
+#           "img_idx": 0,
+#           "task_type": "grounding",
+#           "bbox_2d": [0, 0, 1024, 1024]
+#         }
+#       }
+#       </tool_call>
+#       ```
+#     - With the bounding boxes, use a subregion-question-answering prompt to take a closer look at the region and answer the question.
+#       ```
+#       <tool_call>
+#       {
+#         "name": "vlm_subagent_tool",
+#         "arguments": {
+#           "prompt": "Is this a baby carriage? What is the color of the baby carriage?",
+#           "img_idx": 0,
+#           "task_type": "subregion_question_answering",
+#           "bbox_2d": [63, 32, 150, 170]
+#         }
+#       }
+#       </tool_call>
+#       ```
+# 2. Find the number of people in the local subregion
+#     - Use a grounding prompt to locate the subregion you want to look at in the image
+#     - With the bounding boxes, use a subregion question answering prompt to take a closer look at the region and answer the question.
+# 3. Determine the relative position of two objects
+#     - Use a grounding prompt to locate the two objects in the image
+#     - With the bounding boxes, determine the relative position of the two objects
     
     
-Analysis all the information you have gathered and provide your final answer inside <answer>..your-final-answer..</answer> tags.
-"""
+# Analysis all the information you have gathered and provide your final answer inside <answer>..your-final-answer..</answer> tags.
+# """
+
+CONTEXT_LEARNING_EXAMPLES = ""
 
 
 class CustomRLHFDataset(RLHFDataset):
@@ -378,6 +381,17 @@ def compute_score(data_source: str, solution_str: str, ground_truth: str, extra_
         re.search(r"<tool_call>.*?</tool_call>", solution_str, re.DOTALL)
         or re.search(r"<tool_response>.*?</tool_response>", solution_str, re.DOTALL)
     )
+    
+    # 5.5 if tool usage and answer tag is present, the first tool usage must be before the answer tag
+    if has_tool_usage and answer_match:
+        tool_usage_match = re.search(r"<tool_call>.*?</tool_call>", solution_str, re.DOTALL)
+        tool_response_match = re.search(r"<tool_response>.*?</tool_response>", solution_str, re.DOTALL)
+        answer_match_in_solution_str = re.search(r"<answer>.*?</answer>", solution_str, re.DOTALL)
+        
+        has_tool_usage = (tool_usage_match.start() < answer_match_in_solution_str.start())
+        if bool(tool_response_match):
+            has_tool_usage = has_tool_usage or (tool_response_match.start() < answer_match_in_solution_str.start())
+        
 
     # Tool reward: only give if tools were used AND answer is correct
     tool_reward = 1.0 if has_tool_usage and acc_reward > 0.5 else 0.0
