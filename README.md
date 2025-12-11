@@ -8,6 +8,7 @@
 
 ## Introduction
 
+![chat_examples](./assets/chat_examples.png)
 
 
 ## Installation
@@ -31,7 +32,9 @@ uv pip install -e .[sglang]
 
 # additional dependencies
 uv pip install debugpy==1.8.0 flash-attn==2.8.3 \
-    torch-memory-saver==0.0.9 qwen-vl-utils==0.0.14 qwen-agent==0.0.31
+    torch-memory-saver==0.0.9 \
+    qwen-vl-utils==0.0.14 \
+    qwen-agent==0.0.31
 ```
 
 A full dependency list is provided in  
@@ -48,7 +51,7 @@ A full dependency list is provided in
 
 ### Evaluation
 
-We evaluate DeepEyes using its official official 
+We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual-Agent/DeepEyes/tree/main/eval) and would provide the eval scripts for our models soon. 
 
 ## License
 
