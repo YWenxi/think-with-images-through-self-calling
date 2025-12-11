@@ -2,21 +2,23 @@
 
 set -x
 
+# update the LLM_AS_A_JUDGE_BASE to the correct url
 export LLM_AS_A_JUDGE_BASE="http://127.0.0.1:18901/v1"
-# export WANDB_API_KEY="your wandb key"
+export WANDB_API_KEY="your wandb key"
 
 PROJECT_NAME="VLM-Subagent-RL"
 EXPERIMENT_NAME="VLM-Subagent-GRPO-1xnode7xgpu"
 
 # save experiment results
-EXPERIMENT_DIR="/data2/YangWenxi/subagent-exp"
+EXPERIMENT_DIR="directory-to-save-experiment-results"
+SAVE_CHECKPOINT_DIR=${EXPERIMENT_DIR}/verl_checkpoints/
+BASEDIR="directory-to-verl-repo" # aka this repo's root directory
 
-BASEDIR=/data1/YangWenxi/subagent-rl/verl
-SAVE_CHECKPOINT_DIR=${EXPERIMENT_DIR}/${PROJECT_NAME}/${EXPERIMENT_NAME}/verl_checkpoints
-DATASET_TRAIN=$HOME/Workspace/subagent-rl/data/VLMSubAgent-Datasets-47k/data_0.1.2_visual_toolbox_v2.parquet
-DATASET_VAL=$HOME/Workspace/subagent-rl/data/VLMSubAgent-Datasets-47k/data_thinklite_reasoning_acc.parquet
+DATASET_TRAIN="path-to-training-dataset"
+DATASET_VAL="path-to-validation-dataset"
 
-REF_MODEL_PATH=$HOME/Workspace/subagent-rl/pretrained_models/Qwen/Qwen2.5-VL-7B-Instruct
+REF_MODEL_PATH="path-to-reference-model"
+# e.g. REF_MODEL_PATH=$HOME/Workspace/subagent-rl/pretrained_models/Qwen/Qwen2.5-VL-7B-Instruct
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6
 export RAY_DEBUG_POST_MORTEM=1
@@ -43,7 +45,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.kl_loss_coef=0.0 \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
     actor_rollout_ref.actor.entropy_coeff=0.0 \
-    actor_rollout_ref.actor.checkpoint.save_contents=['model','hf_model','optimizer','extra'] \
+    actor_rollout_ref.actor.checkpoint.save_contents=['model','optimizer','extra'] \
     actor_rollout_ref.actor.ulysses_sequence_parallel_size=1 \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=1 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
@@ -70,8 +72,8 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     trainer.val_before_train=False \
     trainer.n_gpus_per_node=7 \
     trainer.nnodes=1 \
-    trainer.save_freq=8 \
-    trainer.test_freq=80 \
+    trainer.save_freq=80 \
+    trainer.test_freq=-1 \
     trainer.max_actor_ckpt_to_keep=5 \
     trainer.max_critic_ckpt_to_keep=5 \
     trainer.project_name=${PROJECT_NAME} \
