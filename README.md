@@ -6,6 +6,9 @@
 
 </div>
 
+## Introduction
+
+
 
 ## Installation
 
@@ -28,11 +31,24 @@ uv pip install -e .[sglang]
 
 # additional dependencies
 uv pip install debugpy==1.8.0 flash-attn==2.8.3 \
-    torch-memory-saver==0.0.9 qwen-vl-utils==0.0.14
+    torch-memory-saver==0.0.9 qwen-vl-utils==0.0.14 qwen-agent==0.0.31
 ```
 
 A full dependency list is provided in  
 [`requirements_subagent.txt`](./requirements_subagent.txt) for reference.
+
+## Reproduce the experiments
+
+### End-to-End RL Training 
+
+- We provide the training scripts to reproduce the training process in [recipe](./recipe/vlm_subagent/).
+    - The implementation of subagent calling is following the implementation of tools such as `image_zoom_in_tool`. 
+    - Please see the implementation in [`vlm_subagent_tool`](./verl/tools/vlm_subagent_tool.py).
+
+
+### Evaluation
+
+We evaluate DeepEyes using its official official 
 
 ## License
 
