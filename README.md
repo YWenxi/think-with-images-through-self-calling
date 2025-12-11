@@ -8,7 +8,7 @@
 
 ## Introduction
 
-- **Motivation:** Vanilla Thinking with Images paradigms typically use an interleaved Multimodal CoT (iMCoT). However it is a powerful but inefficient and difficult paradigm to incentivize as it requires LLMs to reason across modalities.
+- **Motivation:** Vanilla Thinking with Images paradigms typically use an interleaved Multimodal CoT (iMCoT). It is a powerful but inefficient and difficult paradigm to incentivize as it requires LLMs to reason across modalities.
 - **Method:** we propose **Self-Calling Chain-of-Thought (sCoT)**, a novel visual reasoning paradigm that reformulates iMCoT as a language-only CoT with **self-calling**. 
     - Specifically, a main agent decomposes the complex visual reasoning task to atomic subtasks and invokes its virtual replicas, i.e. parameter-sharing subagents, to solve them in isolated context. 
     - sCoT enjoys substantial training effectiveness and efficiency, as it requires no explicit interleaving between modalities.
