@@ -322,7 +322,8 @@ class FSDPCheckpointManager(BaseCheckpointManager):
                     raise NotImplementedError(f"Unknown architecture {model_config['architectures']}")
 
                 with init_empty_weights():
-                    save_model = auto_model_cls.from_config(model_config, torch_dtype=torch.bfloat16)
+                    # save_model = auto_model_cls.from_config(model_config, torch_dtype=torch.bfloat16)
+                    save_model = auto_model_cls.from_config(model_config)
                 save_model.to_empty(device="cpu")
 
                 if save_model.can_generate():

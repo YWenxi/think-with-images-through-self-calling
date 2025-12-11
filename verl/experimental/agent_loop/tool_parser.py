@@ -96,6 +96,8 @@ class HermesToolParser(ToolParser):
             try:
                 function_call = json.loads(match)
                 name, arguments = function_call["name"], function_call["arguments"]
+                logger.warning(f"SUCCESS TOOL CALL: {function_call}")
+                
                 function_calls.append(FunctionCall(name=name, arguments=json.dumps(arguments, ensure_ascii=False)))
             except Exception as e:
                 logger.error(f"Failed to decode tool call: {e}")
