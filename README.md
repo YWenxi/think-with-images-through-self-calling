@@ -6,6 +6,8 @@
 
 </div>
 
+![infograph](./assets/infograph.png)
+
 ## Introduction
 
 - **Motivation:** Vanilla Thinking with Images paradigms typically use an interleaved Multimodal CoT (iMCoT). It is a powerful but inefficient and difficult paradigm to incentivize as it requires LLMs to reason across modalities.
@@ -43,16 +45,14 @@ uv pip install debugpy==1.8.0 flash-attn==2.8.3 \
     qwen-agent==0.0.31
 ```
 
-A full dependency list is provided in  
-[`requirements_subagent.txt`](./requirements_subagent.txt) for reference.
+A full dependency list is provided in [`requirements_subagent.txt`](./requirements_subagent.txt) for reference.
 
 ## Reproduce the experiments
 
 ### End-to-End RL Training 
 
 - We provide the training scripts to reproduce the training process in [recipe](./recipe/vlm_subagent/).
-    - The implementation of subagent calling is following the implementation of tools such as `image_zoom_in_tool`. 
-    - Please see the implementation in [`vlm_subagent_tool`](./verl/tools/vlm_subagent_tool.py).
+- The implementation of subagent calling is following the implementation of tools such as `image_zoom_in_tool`. Please see the implementation in [`vlm_subagent_tool`](./verl/tools/vlm_subagent_tool.py).
 
 
 ### Evaluation
@@ -64,7 +64,7 @@ We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual
 This project is released under [Apache license](LICENSE).
 
 ## Citation
-
+If you find our work helpful, please cite us with the following:
 ```
 @misc{yang2025thinkingimagesselfcallingagent,
       title={Thinking with Images via Self-Calling Agent}, 
