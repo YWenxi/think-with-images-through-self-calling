@@ -54,7 +54,7 @@ A full dependency list is provided in [`requirements_subagent.txt`](./requiremen
 - We provide the training scripts to reproduce the training process in [recipe](./recipe/vlm_subagent/).
 - The implementation of subagent calling is following the implementation of tools such as `image_zoom_in_tool`. Please see the implementation in [`vlm_subagent_tool`](./verl/tools/vlm_subagent_tool.py).
 - We use training data collected by DeepEyes for fair comparison, which could be downloaded from [huggingface](https://huggingface.co/datasets/ChenShawn/DeepEyes-Datasets-47k).
-- We conducted experiments on a 8xA100 node: one used to serve the LLM-as-a-Judge model (another Qwen2.5-VL-Instruct-7B instance) and 7 used for RL training.
+- We conducted experiments on a single 8xA100 node: one used to serve the LLM-as-a-Judge model (another Qwen2.5-VL-Instruct-7B instance) and 7 used for RL training.
 
 ### Evaluation
 
