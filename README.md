@@ -2,7 +2,7 @@
 </h1>
 <div align="center">
 <a href="https://huggingface.co/papers/2512.08511">
-    <img src="https://img.shields.io/badge/🤗 huggingface-Dataset-blue" alt="paper">
+    <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/paper-page-md.svg" alt="paper">
 </a>
 <a href="http://arxiv.org/abs/2512.08511">
     <img src="https://img.shields.io/badge/arXiv-2512.08511-b31b1b.svg" alt="paper">
