@@ -5,7 +5,7 @@ This directory contains the implementation for reproducing the [Thinking with Im
 ## Reproducing the Experiment
 
 > [!NOTE]
-> We are using data curated by [DeepEyes](https://arxiv.org/abs/2505.14362). There some notes commented in its official [recipe](https://github.com/volcengine/verl/tree/main/recipe/deepeyes).
+> We are using data curated by [DeepEyes](https://arxiv.org/abs/2505.14362). There are some notes commented on datasets in its official [recipe](https://github.com/volcengine/verl/tree/main/recipe/deepeyes).
 
 First, launch an inference service to act as a judge for reward calculation. You can use the following script as a reference:
 
@@ -18,8 +18,7 @@ python -m sglang.launch_server --model-path /path/to/Qwen2.5-72B-Instruct \
     --log-requests false
 ```
 
-Next, you can start the training:
-
+Next, you can start the training (please configure the scripts according to your training experiments first):
 ```bash
 bash recipe/vlm_subagent/run_vlm_subagent_grpo.sh
 ```
