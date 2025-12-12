@@ -1,9 +1,12 @@
-<h1 style="text-align: center;">Thinking with Images via Self-Calling Agent</h1>
-
+<h1 style="text-align: center;">Thinking with Images via Self-Calling Agent
+</h1>
 <div align="center">
-
-[![arXiv](https://img.shields.io/badge/arXiv-2512.08511-b31b1b.svg)](http://arxiv.org/abs/2512.08511)
-
+<a href="https://huggingface.co/papers/2512.08511">
+    <img src="https://img.shields.io/badge/🤗 huggingface-Dataset-blue" alt="paper">
+</a>
+<a href="http://arxiv.org/abs/2512.08511">
+    <img src="https://img.shields.io/badge/arXiv-2512.08511-b31b1b.svg" alt="paper">
+</a>
 </div>
 
 ![infograph](./assets/infograph.png)
