@@ -1,18 +1,17 @@
+import ast
+import os
+import requests
+import base64
+
+from PIL import Image
+from io import BytesIO
+from typing import Dict, Union
+from openai import OpenAI
+
 from qwen_agent.tools.base import BaseToolWithFileAccess, register_tool
 from qwen_agent.utils.utils import extract_images_from_messages
 from qwen_agent.llm.schema import ContentItem
 from qwen_vl_utils import smart_resize
-
-from openai import OpenAI
-
-from typing import Dict, Union
-import os
-import requests
-from PIL import Image, ImageDraw
-from io import BytesIO
-import base64
-
-import ast
 
 # still use the qwen_agent tools
 # if a better framework is found, maybe transfer to the new framework
@@ -65,7 +64,8 @@ class QwenImageVLMTool(BaseToolWithFileAccess):
         "properties": {
             "prompt": {
                 "type": "string",
-                "description": "The prompt to be passed to the VLM model. Wisely design the prompt, so you can make it into any kind oftool on downstream tasks of VLM.",
+                "description": "The prompt to be passed to the VLM model. "
+                    "Wisely design the prompt, so you can make it into any kind oftool on downstream tasks of VLM.",
             },
             "img_idx": {
                 "type": "number",
@@ -73,14 +73,16 @@ class QwenImageVLMTool(BaseToolWithFileAccess):
             },
             "task_type": {
                 "type": "string",
-                "description": 'The type of the task you want to perform. For example, "subregion_caption", "subregion_ocr", and "subregion_question_answering", etc.',
+                "description": "The type of the task you want to perform. "
+                    'For example, "subregion_caption", "subregion_ocr", and "subregion_question_answering", etc.',
             },
             "bbox_2d": {
                 "type": "array",
                 "items": {"type": "number"},
                 "minItems": 4,
                 "maxItems": 4,
-                "description": "The bounding box of the region if you want to zoom in, as [x1, y1, x2, y2], where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.",
+                "description": "The bounding box of the region if you want to zoom in, as [x1, y1, x2, y2], "
+                    "where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.",
             },
         },
         "required": ["prompt", "img_idx", "task_type", "bbox_2d"],
@@ -114,7 +116,9 @@ class QwenImageVLMTool(BaseToolWithFileAccess):
                     },
                     {
                         "type": "text",
-                        "text": "This is a cropped region of the original image. Try to solve the subtask if possible and return the answer. Otherwise, ask the user to make another call."
+                        "text": "This is a cropped region of the original image. "
+                            "Try to solve the subtask if possible and return the answer."
+                            " Otherwise, ask the user to make another call."
                         + prompt,
                     },
                 ],
@@ -179,8 +183,6 @@ class QwenImageVLMTool(BaseToolWithFileAccess):
         if (input_width, input_height) != (width, height):
             image = image.resize((input_width, input_height))
 
-        draw = ImageDraw.Draw(image)
-
         # crop the image if bbox_2d is provided
         if bbox_2d is not None:
             left, top, right, bottom = bbox_2d
@@ -208,7 +210,8 @@ class QwenImageVLMTool(BaseToolWithFileAccess):
         if bbox_2d is None:
             return [
                 ContentItem(
-                    text=f"Error: bbox_2d is required for this subregion task: {task_type}. Please try to call subagent again with a valid bbox_2d."
+                    text=f"Error: bbox_2d is required for this subregion task: {task_type}. "
+                    "Please try to call subagent again with a valid bbox_2d."
                 )
             ]
 
@@ -260,7 +263,8 @@ class QwenVL25ZoomInTool(BaseToolWithFileAccess):
                 "items": {"type": "number"},
                 "minItems": 4,
                 "maxItems": 4,
-                "description": "The bounding box of the region to zoom in, as [x1, y1, x2, y2], where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.",
+                "description": "The bounding box of the region to zoom in, as [x1, y1, x2, y2], "
+                    "where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.",
             },
             "img_idx": {
                 "type": "number",
