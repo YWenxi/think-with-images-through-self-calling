@@ -67,7 +67,7 @@ A full dependency list is provided in [`requirements_subagent.txt`](./requiremen
 
 ### Evaluation
 
-We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual-Agent/DeepEyes/tree/main/eval) and would provide the eval scripts for our models in [eval](./eval/). 
+We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual-Agent/DeepEyes/tree/main/eval) and would provide the eval scripts for our models in [eval](./eval/EVALUATION.md). 
 
 ## License
 
