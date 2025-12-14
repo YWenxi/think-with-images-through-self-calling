@@ -31,8 +31,37 @@ Any VLM that could be served as an OpenAI Compatible api could be easily impleme
         ```
         An example is provided [here](./serve_model.sh).
 2. Evaluate on V*-Bench
+    ```bash
+    MODEL_NAME= # model name of your served model
+
+    API_KEY= # if needed
+    API_URL= http://localhost:18901/v1 # for example
+    VSTAR_BENCH_PATH= # dir path of your v-star benchmark data
+    SAVE_PATH= # saved directory path to calc the scores later
+    NUM_WORKERS=8
+    EVAL_MODEL_NAME=Qwen2.5-VL-7B-Instruct
+
+    python eval_subagent.py \
+        --model_name ${MODEL_NAME} \
+        --api_key ${API_KEY} \
+        --api_url ${API_URL} \
+        --vstar_bench_path ${VSTAR_BENCH_PATH} \
+        --save_path ${SAVE_PATH} \
+        --eval_model_name ${EVAL_MODEL_NAME} \
+        --num_workers ${NUM_WORKERS}
+    ```
 3. Calculate the score.
     - Serve an LLM-as-a-Judge using the above serving scripts.
         > [!NOTE]
         > DeepEyes uses Qwen2.5-VL-75B-Instruct as the judge and we tested it with a judge using Qwen2.5-VL-7B-Instruct. There is only a minor difference for the final difference. See results in our paper.
     - Calculate the score.
+        ```bash
+        python calc_score.py \
+            --model_name ${MODEL_NAME} \
+            --save_path ${SAVE_PATH} \
+            --hrbench_path ${HRBENCH_PATH} \
+            --eval_model_name ${EVAL_MODEL_NAME} \
+            --api_key ${EVAL_API_KEY} \
+            --api_url ${EVAL_MODEL_URL}
+        ```
+4. Example scripts are provided [here](./eval_subagent_example.sh) for reference.
