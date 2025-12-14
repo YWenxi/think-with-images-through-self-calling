@@ -11,6 +11,12 @@
 
 ![infograph](./assets/infograph.png)
 
+### Updates:
+
+- **[12/14/2025]:** Updated an example cookbook to be compatible with the Qwen2.5-VL model in [eval/qwen_agent_cookbook](./eval/qwen_agent_cookbook.ipynb). With only minor modifications, the same setup can be adapted to Qwen3-VL or other models using OpenAI-compatible APIs. Evaluation scripts have also been updated.
+
+---
+
 ## Introduction
 
 - **Motivation:** Vanilla Thinking with Images paradigms typically use an interleaved Multimodal CoT (iMCoT). It is a powerful but inefficient and difficult paradigm to incentivize as it requires LLMs to reason across modalities.
@@ -61,7 +67,7 @@ A full dependency list is provided in [`requirements_subagent.txt`](./requiremen
 
 ### Evaluation
 
-We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual-Agent/DeepEyes/tree/main/eval) and would provide the eval scripts for our models soon. 
+We evaluate DeepEyes using its [official eval scripts](https://github.com/Visual-Agent/DeepEyes/tree/main/eval) and would provide the eval scripts for our models in [eval](./eval/). 
 
 ## License
 
@@ -81,9 +87,9 @@ If you find our work helpful, please cite us with the following:
 }
 ``` -->
 ```
-@article{yang2025thinkingimagesselfcallingagent
+@article{yang2025thinking,
   title={Thinking with Images via Self-Calling Agent},
-  author={Wenxi Yang and Yuzhong Zhao and Fang Wan and Qixiang Ye},
+  author={Yang, Wenxi and Zhao, Yuzhong and Wan, Fang and Ye, Qixiang},
   journal={arXiv preprint arXiv:2512.08511},
   year={2025}
 }
