@@ -1,19 +1,16 @@
 <h1 style="text-align: center;">Thinking with Images via Self-Calling Agent
 </h1>
-<div align="center">
-<a href="https://huggingface.co/papers/2512.08511">
-    <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/paper-page-md.svg" alt="paper">
-</a>
-<a href="http://arxiv.org/abs/2512.08511">
-    <img src="https://img.shields.io/badge/arXiv-2512.08511-b31b1b.svg" alt="paper">
-</a>
-</div>
+
+[![arXiv](https://img.shields.io/badge/Arxiv-2512.08511-b31b1b.svg?logo=arXiv)](http://arxiv.org/abs/2512.08511) 
+[![Paper](https://img.shields.io/badge/Hugging%20Face-Paper-yellow?logo=huggingface)](https://huggingface.co/papers/2512.08511) 
+[![Collection](https://img.shields.io/badge/Hugging%20Face-Models-yellow?logo=huggingface)](https://huggingface.co/ywenxi/SubagentVL-7B-Fine-Chart-80)
 
 ![infograph](./assets/infograph.png)
 
 ### Updates:
 
 - **[12/14/2025]:** Updated an example cookbook to be compatible with the Qwen2.5-VL model in [eval/qwen_agent_cookbook](./eval/qwen_agent_cookbook.ipynb). With only minor modifications, the same setup can be adapted to Qwen3-VL or other models using OpenAI-compatible APIs. Evaluation scripts have also been updated.
+- **[12/15/2025]:** A model checkpoint is uploaded [![Collection](https://img.shields.io/badge/Hugging%20Face-Models-yellow?logo=huggingface)](https://huggingface.co/ywenxi/SubagentVL-7B-Fine-Chart-80).
 
 ---
 
