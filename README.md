@@ -1,3 +1,5 @@
+
+
 <h1 style="text-align: center;">Thinking with Images via Self-Calling Agent
 </h1>
 
@@ -42,7 +44,7 @@ uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 \
     --index-url https://download.pytorch.org/whl/cu128
 
 # install verl with the sglang specification
-uv pip install -e .[sglang]
+uv pip install verl[sglang]
 
 # additional dependencies
 uv pip install debugpy==1.8.0 flash-attn==2.8.3 \
